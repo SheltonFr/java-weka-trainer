@@ -9,7 +9,8 @@ import java.io.InputStream;
 
 public class DatasetLoader {
 
-    public static Instances loadDataset(String filepath) throws Exception {
+    public static Instances loadDataset(String filepath, String classAttribute) throws Exception {
+        System.out.println("Loading dataset from: " + filepath);
         InputStream inputStream = DatasetLoader.class.getClassLoader().getResourceAsStream(filepath);
 
         if (inputStream == null)
@@ -27,6 +28,13 @@ public class DatasetLoader {
             throw new IllegalArgumentException("File format not supported! " + filepath);
         }
 
+        if (classAttribute != null && !classAttribute.isEmpty()) {
+            System.out.println("Setting class attribute to: " + classAttribute);
+            dataset.setClass(dataset.attribute(classAttribute));
+            return dataset;
+        }
+
+        System.out.println("Setting class attribute to: " + dataset.attribute(dataset.numAttributes() - 1).name());
         dataset.setClassIndex(dataset.numAttributes() - 1);
         return dataset;
     }
